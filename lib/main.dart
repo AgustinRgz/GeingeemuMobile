@@ -19,43 +19,88 @@ class MyApp extends StatelessWidget {
         '/third': (context) => const ThirdView(),
         '/fourth': (context) => const FourthView(),
         '/fifth': (context) => const FifthView(),
+        '/sixth': (context) => const SixthView(),
       },
     );
   }
 }
 
-class HomeView extends StatelessWidget {
+class PlaceholderWidget extends StatelessWidget {
+  final Color color;
+  final String text;
+
+  const PlaceholderWidget({required this.color, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: color,
+      child: Center(
+        child: Text(
+          text,
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+      ),
+    );
+  }
+}
+
+class HomeView extends StatefulWidget {
+  const HomeView({Key? key}) : super(key: key);
+
+  @override
+  _HomeViewState createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
   final TextEditingController text1Controller = TextEditingController();
   final TextEditingController text2Controller = TextEditingController();
 
-  HomeView({Key? key}) : super(key: key);
+  int _currentIndex = 0;
+
+  final List<Widget> _pages = [
+    PlaceholderWidget(color: Colors.red, text: 'Inicio'),
+    PlaceholderWidget(color: Colors.green, text: 'Carrito'),
+    PlaceholderWidget(color: Colors.blue, text: 'Lista de Deseos'),
+    PlaceholderWidget(color: const Color.fromARGB(255, 58, 243, 33), text: 'Vender'),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Vista Principal'),
+        backgroundColor: Colors.grey,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextField(
-              controller: text1Controller,
-              decoration: const InputDecoration(
-                labelText: 'Campo de Texto 1',
-              ),
-            ),
-            const SizedBox(height: 16.0),
-            TextField(
-              controller: text2Controller,
-              decoration: const InputDecoration(
-                labelText: 'Campo de Texto 2',
-              ),
-            ),
-          ],
-        ),
+      body: _pages[_currentIndex], // Corregido
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.yellow,       // Cambia el color de fondo
+        selectedItemColor: Colors.blue,
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Inicio',
+            backgroundColor: const Color.fromARGB(255, 197, 197, 197),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart),
+            label: 'Carrito',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: 'Lista de Deseos',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.local_grocery_store),
+            label: 'Vender',
+          ),
+        ],
       ),
       drawer: Drawer(
         child: ListView(
@@ -64,16 +109,16 @@ class HomeView extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.blue,
               ),
-              child: Text('Drawer Header'),
+              child: Text('Usuario'),
             ),
             ListTile(
-              title: const Text('Item 1'),
+              title: const Text('Mi perfil'),
               onTap: () {
                 Navigator.pop(context);
               },
             ),
             ListTile(
-              title: const Text('Item 2'),
+              title: const Text('Mis compras'),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, '/second',
@@ -81,24 +126,32 @@ class HomeView extends StatelessWidget {
               },
             ),
             ListTile(
-              title: const Text('Item 3'),
+              title: const Text('Mi lista de deseos'),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, '/third');
               },
             ),
             ListTile(
-              title: const Text('Item 4'),
+              title: const Text('Mis ventas'),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, '/fourth');
               },
             ),
+            Divider(),
             ListTile(
-              title: const Text('Item 5'),
+              title: const Text('Configuraciones'),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, '/fifth');
+              },
+            ),
+            ListTile(
+              title: const Text('Ayuda y soporte'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/sixth');
               },
             ),
           ],
@@ -383,6 +436,66 @@ class _FifthViewState extends State<FifthView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Quinta Vista")),
+      body: Column(
+        children: <Widget>[
+          if (_image != null)
+            kIsWeb
+                ? Image.network(_image!.path)
+                : Image.file(_image!),
+          Row(
+            children: [
+              ElevatedButton(
+                  onPressed: () => getImage(ImageSource.gallery),
+                  child: const Text("Cargar Imagen")),
+              const SizedBox(width: 10),
+              ElevatedButton(
+                  onPressed: () => getImage(ImageSource.camera),
+                  child: const Text("Tomar Foto")),
+            ],
+          ),
+          TextField(
+            controller: textController,
+            decoration: const InputDecoration(hintText: 'Nombre'),
+          ),
+          ElevatedButton(
+              onPressed: () {
+                // Aquí puedes usar la imagen (_image) y el texto (textController.text)
+                setState(() {});
+              },
+              child: const Text('Submit')),
+          if (_image != null) Text(textController.text),
+        ],
+      ),
+    );
+  }
+}
+
+class SixthView extends StatefulWidget {
+  const SixthView({super.key});
+
+  @override
+  _SixthViewState createState() => _SixthViewState();
+}
+
+class _SixthViewState extends State<SixthView> {
+  File? _image;
+  final picker = ImagePicker();
+  final textController = TextEditingController();
+
+  Future getImage(ImageSource source) async {
+    final pickedFile = await picker.pickImage(source: source);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Sexta Vista")),
       body: Column(
         children: <Widget>[
           if (_image != null)
