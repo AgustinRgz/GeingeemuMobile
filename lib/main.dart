@@ -45,6 +45,26 @@ class PlaceholderWidget extends StatelessWidget {
   }
 }
 
+class ObscuredTextFieldSample extends StatelessWidget {
+  const ObscuredTextFieldSample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox(
+      width: 400,
+      height: 40,
+      child: TextField(
+        obscureText: false,
+        decoration: InputDecoration(
+          border: OutlineInputBorder(),
+          labelText: 'Buscar',
+          icon: Icon(Icons.search),
+        ),
+      ),
+    );
+  }
+}
+
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
 
@@ -69,8 +89,9 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Vista Principal'),
-        backgroundColor: Colors.grey,
+        title: const Center(
+          child: ObscuredTextFieldSample(),
+        ),
       ),
       body: _pages[_currentIndex], // Corregido
       bottomNavigationBar: BottomNavigationBar(
