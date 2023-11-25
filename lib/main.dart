@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         '/third': (context) => const ThirdView(),
         '/fourth': (context) => const FourthView(),
         '/fifth': (context) => const FifthView(),
-        '/sixth': (context) => const SixthView(),
+        '/sixth': (context) => const SellView(),
       },
     );
   }
@@ -38,7 +38,8 @@ class PlaceholderWidget extends StatelessWidget {
       child: Center(
         child: Text(
           text,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+          style: TextStyle(
+              fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
         ),
       ),
     );
@@ -65,6 +66,27 @@ class ObscuredTextFieldSample extends StatelessWidget {
   }
 }
 
+class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final double height;
+
+  const CustomAppBar({required this.height});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: height,
+      child: AppBar(
+        title: const Center(
+          child: ObscuredTextFieldSample(),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Size get preferredSize => Size.fromHeight(height);
+}
+
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
 
@@ -73,6 +95,8 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  double _appBarHeight = kToolbarHeight; // Altura inicial del AppBar
+
   final TextEditingController text1Controller = TextEditingController();
   final TextEditingController text2Controller = TextEditingController();
 
@@ -82,25 +106,27 @@ class _HomeViewState extends State<HomeView> {
     PlaceholderWidget(color: Colors.red, text: 'Inicio'),
     PlaceholderWidget(color: Colors.green, text: 'Carrito'),
     PlaceholderWidget(color: Colors.blue, text: 'Lista de Deseos'),
-    PlaceholderWidget(color: const Color.fromARGB(255, 58, 243, 33), text: 'Vender'),
+    const SellView(),
+    // PlaceholderWidget(color: const Color.fromARGB(255, 58, 243, 33), text: 'Vender'),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Center(
-          child: ObscuredTextFieldSample(),
-        ),
+      appBar: CustomAppBar(
+        height: _appBarHeight,
       ),
       body: _pages[_currentIndex], // Corregido
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.yellow,       // Cambia el color de fondo
+        backgroundColor: Colors.yellow, // Cambia el color de fondo
         selectedItemColor: Colors.blue,
         currentIndex: _currentIndex,
         onTap: (index) {
           setState(() {
             _currentIndex = index;
+            _appBarHeight = index == 0
+                ? kToolbarHeight
+                : 0; // Oculta el AppBar si no es la primera opción
           });
         },
         items: [
@@ -118,7 +144,7 @@ class _HomeViewState extends State<HomeView> {
             label: 'Lista de Deseos',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.local_grocery_store),
+            icon: Icon(Icons.sell),
             label: 'Vender',
           ),
         ],
@@ -187,8 +213,9 @@ class SecondView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<TextEditingController> controllers =
-        ModalRoute.of(context)?.settings.arguments as List<TextEditingController>;
+    final List<TextEditingController> controllers = ModalRoute.of(context)
+        ?.settings
+        .arguments as List<TextEditingController>;
 
     return Scaffold(
       appBar: AppBar(
@@ -209,7 +236,8 @@ class SecondView extends StatelessWidget {
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(16.0),
-                    minimumSize: const Size(120.0, 60.0), // Ajusta el tamaño del botón
+                    minimumSize:
+                        const Size(120.0, 60.0), // Ajusta el tamaño del botón
                   ),
                   child: const Text('Botón 1'),
                 ),
@@ -219,7 +247,8 @@ class SecondView extends StatelessWidget {
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(16.0),
-                    minimumSize: const Size(120.0, 60.0), // Ajusta el tamaño del botón
+                    minimumSize:
+                        const Size(120.0, 60.0), // Ajusta el tamaño del botón
                   ),
                   child: const Text('Botón 2'),
                 ),
@@ -229,7 +258,8 @@ class SecondView extends StatelessWidget {
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(16.0),
-                    minimumSize: const Size(120.0, 60.0), // Ajusta el tamaño del botón
+                    minimumSize:
+                        const Size(120.0, 60.0), // Ajusta el tamaño del botón
                   ),
                   child: const Text('Botón 3'),
                 ),
@@ -246,7 +276,8 @@ class SecondView extends StatelessWidget {
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(16.0),
-                    minimumSize: const Size(120.0, 60.0), // Ajusta el tamaño del botón
+                    minimumSize:
+                        const Size(120.0, 60.0), // Ajusta el tamaño del botón
                   ),
                   child: const Text('Botón 4'),
                 ),
@@ -256,7 +287,8 @@ class SecondView extends StatelessWidget {
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(16.0),
-                    minimumSize: const Size(120.0, 60.0), // Ajusta el tamaño del botón
+                    minimumSize:
+                        const Size(120.0, 60.0), // Ajusta el tamaño del botón
                   ),
                   child: const Text('Botón 5'),
                 ),
@@ -266,7 +298,8 @@ class SecondView extends StatelessWidget {
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(16.0),
-                    minimumSize: const Size(120.0, 60.0), // Ajusta el tamaño del botón
+                    minimumSize:
+                        const Size(120.0, 60.0), // Ajusta el tamaño del botón
                   ),
                   child: const Text('Botón 6'),
                 ),
@@ -283,7 +316,8 @@ class SecondView extends StatelessWidget {
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(16.0),
-                    minimumSize: const Size(120.0, 60.0), // Ajusta el tamaño del botón
+                    minimumSize:
+                        const Size(120.0, 60.0), // Ajusta el tamaño del botón
                   ),
                   child: const Text('Botón 7'),
                 ),
@@ -293,7 +327,8 @@ class SecondView extends StatelessWidget {
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(16.0),
-                    minimumSize: const Size(120.0, 60.0), // Ajusta el tamaño del botón
+                    minimumSize:
+                        const Size(120.0, 60.0), // Ajusta el tamaño del botón
                   ),
                   child: const Text('Botón 8'),
                 ),
@@ -303,7 +338,8 @@ class SecondView extends StatelessWidget {
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(16.0),
-                    minimumSize: const Size(120.0, 60.0), // Ajusta el tamaño del botón
+                    minimumSize:
+                        const Size(120.0, 60.0), // Ajusta el tamaño del botón
                   ),
                   child: const Text('Botón 9'),
                 ),
@@ -315,11 +351,13 @@ class SecondView extends StatelessWidget {
     );
   }
 
-  void _showMessage(BuildContext context, List<TextEditingController> controllers) {
+  void _showMessage(
+      BuildContext context, List<TextEditingController> controllers) {
     final text1 = controllers[0].text;
     final text2 = controllers[1].text;
 
-    final message = 'Este es el contenido de la vista principal:\n$text1\n$text2';
+    final message =
+        'Este es el contenido de la vista principal:\n$text1\n$text2';
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -460,9 +498,7 @@ class _FifthViewState extends State<FifthView> {
       body: Column(
         children: <Widget>[
           if (_image != null)
-            kIsWeb
-                ? Image.network(_image!.path)
-                : Image.file(_image!),
+            kIsWeb ? Image.network(_image!.path) : Image.file(_image!),
           Row(
             children: [
               ElevatedButton(
@@ -491,61 +527,123 @@ class _FifthViewState extends State<FifthView> {
   }
 }
 
-class SixthView extends StatefulWidget {
-  const SixthView({super.key});
+class SellView extends StatefulWidget {
+  const SellView({super.key});
 
   @override
-  _SixthViewState createState() => _SixthViewState();
+  _SellViewState createState() => _SellViewState();
 }
 
-class _SixthViewState extends State<SixthView> {
-  File? _image;
-  final picker = ImagePicker();
-  final textController = TextEditingController();
-
-  Future getImage(ImageSource source) async {
-    final pickedFile = await picker.pickImage(source: source);
-
-    setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-      }
-    });
-  }
+class _SellViewState extends State<SellView> {
+  bool _showFab = true;
+  bool _showNotch = true;
+  FloatingActionButtonLocation _fabLocation =
+      FloatingActionButtonLocation.endDocked;
+  final TextEditingController text1Controller = TextEditingController();
+  final TextEditingController text2Controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Sexta Vista")),
       body: Column(
-        children: <Widget>[
-          if (_image != null)
-            kIsWeb
-                ? Image.network(_image!.path)
-                : Image.file(_image!),
-          Row(
-            children: [
-              ElevatedButton(
-                  onPressed: () => getImage(ImageSource.gallery),
-                  child: const Text("Cargar Imagen")),
-              const SizedBox(width: 10),
-              ElevatedButton(
-                  onPressed: () => getImage(ImageSource.camera),
-                  child: const Text("Tomar Foto")),
-            ],
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10.0),
+            color: const Color.fromARGB(
+                255, 199, 199, 199), // Color de fondo del título
+            child: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(width: 8.0),
+                  Text(
+                    'Vender mis juegos',
+                    style: TextStyle(
+                      fontSize: 30.0,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromRGBO(0, 137, 195, 100),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-          TextField(
-            controller: textController,
-            decoration: const InputDecoration(hintText: 'Nombre'),
+          // Contenido de la vista
+          Expanded(
+            child: Center(
+              child: Text(
+                '',
+                style: TextStyle(fontSize: 18.0),
+              ),
+            ),
           ),
-          ElevatedButton(
-              onPressed: () {
-                // Aquí puedes usar la imagen (_image) y el texto (textController.text)
-                setState(() {});
-              },
-              child: const Text('Submit')),
-          if (_image != null) Text(textController.text),
         ],
+      ),
+      floatingActionButton: _showFab
+          ? FloatingActionButton(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/third');
+              },
+              tooltip: 'Nuevo Juego',
+              child: const Icon(Icons.add),
+            )
+          : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text('Usuario'),
+            ),
+            ListTile(
+              title: const Text('Mi perfil'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Mis compras'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/second',
+                    arguments: [text1Controller, text2Controller]);
+              },
+            ),
+            ListTile(
+              title: const Text('Mi lista de deseos'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/third');
+              },
+            ),
+            ListTile(
+              title: const Text('Mis ventas'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/fourth');
+              },
+            ),
+            Divider(),
+            ListTile(
+              title: const Text('Configuraciones'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/fifth');
+              },
+            ),
+            ListTile(
+              title: const Text('Ayuda y soporte'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/sixth');
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
