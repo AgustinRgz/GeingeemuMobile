@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/foundation.dart';
+import 'buscador.dart';
+import 'miscompras.dart';
 
 void main() => runApp(const MyApp());
 
@@ -20,6 +22,7 @@ class MyApp extends StatelessWidget {
         '/fourth': (context) => const FourthView(),
         '/fifth': (context) => const FifthView(),
         '/sixth': (context) => const SellView(),
+        '/buscador': (context) => BuscadorView(),
       },
     );
   }
@@ -73,12 +76,20 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: height,
+    return PreferredSize(
+      preferredSize: Size.fromHeight(height),
       child: AppBar(
-        title: const Center(
+        title: Center(
           child: ObscuredTextFieldSample(),
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              Navigator.pushNamed(context, '/buscador');
+            },
+          ),
+        ],
       ),
     );
   }
@@ -86,7 +97,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => Size.fromHeight(height);
 }
-
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
 
@@ -97,9 +107,6 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   double _appBarHeight = kToolbarHeight; // Altura inicial del AppBar
 
-  final TextEditingController text1Controller = TextEditingController();
-  final TextEditingController text2Controller = TextEditingController();
-
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
@@ -107,7 +114,6 @@ class _HomeViewState extends State<HomeView> {
     PlaceholderWidget(color: Colors.green, text: 'Carrito'),
     PlaceholderWidget(color: Colors.blue, text: 'Lista de Deseos'),
     const SellView(),
-    // PlaceholderWidget(color: const Color.fromARGB(255, 58, 243, 33), text: 'Vender'),
   ];
 
   @override
@@ -116,17 +122,15 @@ class _HomeViewState extends State<HomeView> {
       appBar: CustomAppBar(
         height: _appBarHeight,
       ),
-      body: _pages[_currentIndex], // Corregido
+      body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.yellow, // Cambia el color de fondo
+        backgroundColor: Colors.yellow,
         selectedItemColor: Colors.blue,
         currentIndex: _currentIndex,
         onTap: (index) {
           setState(() {
             _currentIndex = index;
-            _appBarHeight = index == 0
-                ? kToolbarHeight
-                : 0; // Oculta el AppBar si no es la primera opción
+            _appBarHeight = index == 0 ? kToolbarHeight : 0;
           });
         },
         items: [
@@ -168,8 +172,12 @@ class _HomeViewState extends State<HomeView> {
               title: const Text('Mis compras'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pushNamed(context, '/second',
-                    arguments: [text1Controller, text2Controller]);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MisComprasView(controllers: []),
+                  ),
+                );
               },
             ),
             ListTile(
@@ -213,10 +221,6 @@ class SecondView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<TextEditingController> controllers = ModalRoute.of(context)
-        ?.settings
-        .arguments as List<TextEditingController>;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Segunda Vista'),
@@ -226,120 +230,90 @@ class SecondView extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Primera fila de botones
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton(
-                  onPressed: () {
-                    _showMessage(context, controllers);
-                  },
+                  onPressed: () {},
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(16.0),
-                    minimumSize:
-                        const Size(120.0, 60.0), // Ajusta el tamaño del botón
+                    minimumSize: const Size(120.0, 60.0),
                   ),
                   child: const Text('Botón 1'),
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    // Lógica para el segundo botón
-                  },
+                  onPressed: () {},
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(16.0),
-                    minimumSize:
-                        const Size(120.0, 60.0), // Ajusta el tamaño del botón
+                    minimumSize: const Size(120.0, 60.0),
                   ),
                   child: const Text('Botón 2'),
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    // Lógica para el tercer botón
-                  },
+                  onPressed: () {},
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(16.0),
-                    minimumSize:
-                        const Size(120.0, 60.0), // Ajusta el tamaño del botón
+                    minimumSize: const Size(120.0, 60.0),
                   ),
                   child: const Text('Botón 3'),
                 ),
               ],
             ),
             const SizedBox(height: 16.0),
-            // Segunda fila de botones
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton(
-                  onPressed: () {
-                    // Lógica para el cuarto botón
-                  },
+                  onPressed: () {},
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(16.0),
-                    minimumSize:
-                        const Size(120.0, 60.0), // Ajusta el tamaño del botón
+                    minimumSize: const Size(120.0, 60.0),
                   ),
                   child: const Text('Botón 4'),
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    // Lógica para el quinto botón
-                  },
+                  onPressed: () {},
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(16.0),
-                    minimumSize:
-                        const Size(120.0, 60.0), // Ajusta el tamaño del botón
+                    minimumSize: const Size(120.0, 60.0),
                   ),
                   child: const Text('Botón 5'),
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    // Lógica para el sexto botón
-                  },
+                  onPressed: () {},
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(16.0),
-                    minimumSize:
-                        const Size(120.0, 60.0), // Ajusta el tamaño del botón
+                    minimumSize: const Size(120.0, 60.0),
                   ),
                   child: const Text('Botón 6'),
                 ),
               ],
             ),
             const SizedBox(height: 16.0),
-            // Tercera fila de botones
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton(
-                  onPressed: () {
-                    // Lógica para el séptimo botón
-                  },
+                  onPressed: () {},
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(16.0),
-                    minimumSize:
-                        const Size(120.0, 60.0), // Ajusta el tamaño del botón
+                    minimumSize: const Size(120.0, 60.0),
                   ),
                   child: const Text('Botón 7'),
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    // Lógica para el octavo botón
-                  },
+                  onPressed: () {},
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(16.0),
-                    minimumSize:
-                        const Size(120.0, 60.0), // Ajusta el tamaño del botón
+                    minimumSize: const Size(120.0, 60.0),
                   ),
                   child: const Text('Botón 8'),
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    // Lógica para el noveno botón
-                  },
+                  onPressed: () {},
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(16.0),
-                    minimumSize:
-                        const Size(120.0, 60.0), // Ajusta el tamaño del botón
+                    minimumSize: const Size(120.0, 60.0),
                   ),
                   child: const Text('Botón 9'),
                 ),
@@ -347,21 +321,6 @@ class SecondView extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  void _showMessage(
-      BuildContext context, List<TextEditingController> controllers) {
-    final text1 = controllers[0].text;
-    final text2 = controllers[1].text;
-
-    final message =
-        'Este es el contenido de la vista principal:\n$text1\n$text2';
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
       ),
     );
   }
@@ -516,7 +475,6 @@ class _FifthViewState extends State<FifthView> {
           ),
           ElevatedButton(
               onPressed: () {
-                // Aquí puedes usar la imagen (_image) y el texto (textController.text)
                 setState(() {});
               },
               child: const Text('Submit')),

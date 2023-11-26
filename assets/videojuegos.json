@@ -1,0 +1,18 @@
+[
+    {
+      "nombre": "Halo Infinite Xbox Collector Steelbook Edition",
+      "imagen": "assets/imagenes/haloinfinite.jpg",
+      "precio": 2500.00
+    },
+    {
+      "nombre": "Halo 5",
+      "imagen": "assets/imagenes/halo5.jpg",
+      "precio": 2500.00
+    },
+    {
+      "nombre": "Halo 4",
+      "imagen": "assets/imagenes/halo4.jpg",
+      "precio": 1999.99
+    }
+  ]
+  
