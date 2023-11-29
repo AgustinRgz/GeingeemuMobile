@@ -4,7 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'buscador.dart';
 import 'miscompras.dart';
-
+import 'Miperfil.dart';
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
@@ -166,7 +166,12 @@ class _HomeViewState extends State<HomeView> {
               title: const Text('Mi perfil'),
               onTap: () {
                 Navigator.pop(context);
-                
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MiPerfilView(),
+                  ),
+                );
               },
             ),
             ListTile(
