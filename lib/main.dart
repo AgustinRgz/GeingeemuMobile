@@ -166,6 +166,7 @@ class _HomeViewState extends State<HomeView> {
               title: const Text('Mi perfil'),
               onTap: () {
                 Navigator.pop(context);
+                
               },
             ),
             ListTile(
