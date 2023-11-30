@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'buscador.dart';
 import 'miscompras.dart';
 import 'Miperfil.dart';
+import 'carrito.dart';
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
         '/fifth': (context) => const FifthView(),
         '/sixth': (context) => const SellView(),
         '/buscador': (context) => BuscadorView(),
+        '/shoppingCart': (context) => ShoppingCartView(), 
       },
     );
   }
@@ -106,12 +108,11 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   double _appBarHeight = kToolbarHeight; // Altura inicial del AppBar
-
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
     PlaceholderWidget(color: Colors.red, text: 'Inicio'),
-    PlaceholderWidget(color: Colors.green, text: 'Carrito'),
+    ShoppingCartView(), // Ahora incluye directamente la vista del carrito
     PlaceholderWidget(color: Colors.blue, text: 'Lista de Deseos'),
     const SellView(),
   ];
