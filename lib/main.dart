@@ -70,7 +70,12 @@ class ObscuredTextFieldSample extends StatelessWidget {
         decoration: InputDecoration(
           border: OutlineInputBorder(),
           labelText: searchText.isEmpty ? 'Buscar' : searchText,
-          icon: Icon(Icons.search),
+          icon: IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => BuscadorView(searchText: searchText)));
+            }
+          ),
         ),
       ),
     );
@@ -96,9 +101,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.search),
+            
+            icon: const Icon(Icons.search),
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => BuscadorView(searchText: searchText)));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => BuscadorView(searchText: 'Halo')));
             },
           ),
         ],
