@@ -25,8 +25,8 @@ class MyApp extends StatelessWidget {
         '/fifth': (context) => const FifthView(),
         '/sixth': (context) => const SellView(),
         '/newsell': (context) => const NewSellView(),
-        '/buscador': (context) => BuscadorView(),
-        '/shoppingCart': (context) => ShoppingCartView(), 
+      // Add this line for 'buscador' route
+        '/shoppingCart': (context) => ShoppingCartView(),
       },
     );
   }
@@ -75,8 +75,10 @@ class ObscuredTextFieldSample extends StatelessWidget {
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double height;
+  final BuildContext context;
+  final String searchText; // Add this field
 
-  const CustomAppBar({required this.height});
+  const CustomAppBar({required this.height, required this.context, required this.searchText});
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +92,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           IconButton(
             icon: Icon(Icons.search),
             onPressed: () {
-              Navigator.pushNamed(context, '/buscador');
+              Navigator.push(context, MaterialPageRoute(builder: (context) => BuscadorView(searchText: searchText)));
             },
           ),
         ],
@@ -101,6 +103,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => Size.fromHeight(height);
 }
+
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
 
@@ -124,7 +127,11 @@ class _HomeViewState extends State<HomeView> {
     return Scaffold(
       appBar: CustomAppBar(
         height: _appBarHeight,
-      ),
+        context: context,
+        searchText: '',
+        // Add this line
+        // Add this line
+      ) ,  
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.yellow,
