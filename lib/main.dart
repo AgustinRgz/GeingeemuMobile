@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geingeemu/inicio.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/foundation.dart';
@@ -7,6 +8,7 @@ import 'miscompras.dart';
 import 'Miperfil.dart';
 import 'carrito.dart';
 import 'ventas.dart';
+import 'inicio.dart';
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
@@ -122,7 +124,7 @@ class _HomeViewState extends State<HomeView> {
   String _searchText = ''; // Add this line
 
   final List<Widget> _pages = [
-    PlaceholderWidget(color: Colors.red, text: 'Inicio'),
+    const InicioView(),
     ShoppingCartView(),
     PlaceholderWidget(color: Colors.blue, text: 'Lista de Deseos'),
     const SellView(),
