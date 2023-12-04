@@ -6,6 +6,7 @@ import 'buscador.dart';
 import 'miscompras.dart';
 import 'Miperfil.dart';
 import 'carrito.dart';
+import 'ventas.dart';
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
         '/fourth': (context) => const FourthView(),
         '/fifth': (context) => const FifthView(),
         '/sixth': (context) => const SellView(),
+        '/newsell': (context) => const NewSellView(),
         '/buscador': (context) => BuscadorView(),
         '/shoppingCart': (context) => ShoppingCartView(), 
       },
@@ -487,128 +489,6 @@ class _FifthViewState extends State<FifthView> {
               child: const Text('Submit')),
           if (_image != null) Text(textController.text),
         ],
-      ),
-    );
-  }
-}
-
-class SellView extends StatefulWidget {
-  const SellView({super.key});
-
-  @override
-  _SellViewState createState() => _SellViewState();
-}
-
-class _SellViewState extends State<SellView> {
-  bool _showFab = true;
-  bool _showNotch = true;
-  FloatingActionButtonLocation _fabLocation =
-      FloatingActionButtonLocation.endDocked;
-  final TextEditingController text1Controller = TextEditingController();
-  final TextEditingController text2Controller = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10.0),
-            color: const Color.fromARGB(
-                255, 199, 199, 199), // Color de fondo del título
-            child: Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(width: 8.0),
-                  Text(
-                    'Vender mis juegos',
-                    style: TextStyle(
-                      fontSize: 30.0,
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromRGBO(0, 137, 195, 100),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          // Contenido de la vista
-          Expanded(
-            child: Center(
-              child: Text(
-                '',
-                style: TextStyle(fontSize: 18.0),
-              ),
-            ),
-          ),
-        ],
-      ),
-      floatingActionButton: _showFab
-          ? FloatingActionButton(
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/third');
-              },
-              tooltip: 'Nuevo Juego',
-              child: const Icon(Icons.add),
-            )
-          : null,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-              child: Text('Usuario'),
-            ),
-            ListTile(
-              title: const Text('Mi perfil'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: const Text('Mis compras'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/second',
-                    arguments: [text1Controller, text2Controller]);
-              },
-            ),
-            ListTile(
-              title: const Text('Mi lista de deseos'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/third');
-              },
-            ),
-            ListTile(
-              title: const Text('Mis ventas'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/fourth');
-              },
-            ),
-            Divider(),
-            ListTile(
-              title: const Text('Configuraciones'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/fifth');
-              },
-            ),
-            ListTile(
-              title: const Text('Ayuda y soporte'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/sixth');
-              },
-            ),
-          ],
-        ),
       ),
     );
   }
