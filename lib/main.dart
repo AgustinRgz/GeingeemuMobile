@@ -54,18 +54,20 @@ class PlaceholderWidget extends StatelessWidget {
 }
 
 class ObscuredTextFieldSample extends StatelessWidget {
-  const ObscuredTextFieldSample({super.key});
+  final String searchText;
+
+  const ObscuredTextFieldSample({super.key, required this.searchText});
 
   @override
   Widget build(BuildContext context) {
-    return const SizedBox(
+    return SizedBox(
       width: 400,
       height: 40,
       child: TextField(
         obscureText: false,
         decoration: InputDecoration(
           border: OutlineInputBorder(),
-          labelText: 'Buscar',
+          labelText: searchText.isEmpty ? 'Buscar' : searchText,
           icon: Icon(Icons.search),
         ),
       ),
@@ -73,10 +75,12 @@ class ObscuredTextFieldSample extends StatelessWidget {
   }
 }
 
+
+
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double height;
   final BuildContext context;
-  final String searchText; // Add this field
+  final String searchText;
 
   const CustomAppBar({required this.height, required this.context, required this.searchText});
 
@@ -86,7 +90,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       preferredSize: Size.fromHeight(height),
       child: AppBar(
         title: Center(
-          child: ObscuredTextFieldSample(),
+          child: ObscuredTextFieldSample(searchText: searchText),
         ),
         actions: [
           IconButton(
@@ -104,6 +108,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => Size.fromHeight(height);
 }
 
+
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
 
@@ -114,10 +119,11 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   double _appBarHeight = kToolbarHeight; // Altura inicial del AppBar
   int _currentIndex = 0;
+  String _searchText = ''; // Add this line
 
   final List<Widget> _pages = [
     PlaceholderWidget(color: Colors.red, text: 'Inicio'),
-    ShoppingCartView(), // Ahora incluye directamente la vista del carrito
+    ShoppingCartView(),
     PlaceholderWidget(color: Colors.blue, text: 'Lista de Deseos'),
     const SellView(),
   ];
@@ -128,10 +134,9 @@ class _HomeViewState extends State<HomeView> {
       appBar: CustomAppBar(
         height: _appBarHeight,
         context: context,
-        searchText: '',
-        // Add this line
-        // Add this line
-      ) ,  
+        searchText: _searchText,
+        // Pass the search text to CustomAppBar
+      ),
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.yellow,
