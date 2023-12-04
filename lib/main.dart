@@ -100,13 +100,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           child: ObscuredTextFieldSample(searchText: searchText),
         ),
         actions: [
-          IconButton(
-            
-            icon: const Icon(Icons.search),
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => BuscadorView(searchText: 'Halo')));
-            },
-          ),
+          
         ],
       ),
     );
