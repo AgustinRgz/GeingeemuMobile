@@ -116,7 +116,8 @@ class _NewSellViewState extends State<NewSellView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+      body: ListView(
+        scrollDirection: Axis.vertical,
         children: <Widget>[
           Container(
             padding: const EdgeInsets.all(10.0),
