@@ -221,6 +221,8 @@ class _NewSellViewState extends State<NewSellView> {
           ElevatedButton(
               onPressed: () {
                 setState(() {});
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/');
               },
               child: const Text('Submit')),
           if (_image != null) Text(nameController.text),

@@ -27,7 +27,6 @@ class MyApp extends StatelessWidget {
         '/fifth': (context) => const FifthView(),
         '/sixth': (context) => const SellView(),
         '/newsell': (context) => const NewSellView(),
-      // Add this line for 'buscador' route
         '/shoppingCart': (context) => ShoppingCartView(),
       },
     );
