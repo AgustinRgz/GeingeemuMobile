@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+import 'package:flutter/foundation.dart';
 
 class SellView extends StatefulWidget {
   const SellView({super.key});
@@ -75,28 +78,50 @@ class NewSellView extends StatefulWidget {
 }
 
 class _NewSellViewState extends State<NewSellView> {
-  // File? _image;
-  // final picker = ImagePicker();
-  // final textController = TextEditingController();
+  File? _image;
+  final picker = ImagePicker();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController brandController = TextEditingController();
+  final TextEditingController stockController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
 
-  // Future getImage(ImageSource source) async {
-  //   final pickedFile = await picker.pickImage(source: source);
+  // Function to increment the stock
+  void incrementStock() {
+    setState(() {
+      int currentStock = int.tryParse(stockController.text) ?? 0;
+      stockController.text = (currentStock + 1).toString();
+    });
+  }
 
-  //   setState(() {
-  //     if (pickedFile != null) {
-  //       _image = File(pickedFile.path);
-  //     }
-  //   });
-  // }
+  // Function to decrement the stock
+  void decrementStock() {
+    setState(() {
+      int currentStock = int.tryParse(stockController.text) ?? 0;
+      if (currentStock > 0) {
+        stockController.text = (currentStock - 1).toString();
+      }
+    });
+  }
+
+  Future getImage(ImageSource source) async {
+    final pickedFile = await picker.pickImage(source: source);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
-        children: [
+        children: <Widget>[
           Container(
             padding: const EdgeInsets.all(10.0),
-            color: const Color.fromARGB(255, 199, 199, 199), // Color de fondo del título
+            color: const Color.fromARGB(
+                255, 199, 199, 199), // Color de fondo del título
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -134,6 +159,70 @@ class _NewSellViewState extends State<NewSellView> {
               ),
             ),
           ),
+          if (_image != null)
+            kIsWeb
+                ? Image.network(
+                    _image!.path,
+                    width: MediaQuery.of(context).size.width,
+                  )
+                : Image.file(
+                    _image!,
+                    width: MediaQuery.of(context).size.width,
+                  ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                  onPressed: () => getImage(ImageSource.gallery),
+                  child: const Text("Cargar Imagen")),
+              const SizedBox(
+                width: 10,
+                height: 10,
+              ),
+              ElevatedButton(
+                  onPressed: () => getImage(ImageSource.camera),
+                  child: const Text("Tomar Foto")),
+            ],
+          ),
+          TextField(
+            controller: nameController,
+            decoration: const InputDecoration(hintText: 'Nombre'),
+          ),
+          TextField(
+            controller: brandController,
+            decoration: const InputDecoration(hintText: 'Marca'),
+          ),
+          TextField(
+            controller: stockController,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(hintText: 'Stock'),
+          ),
+
+          // Numeric input for incrementing and decrementing stock
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: incrementStock,
+                child: Icon(Icons.add),
+              ),
+              SizedBox(width: 10),
+              ElevatedButton(
+                onPressed: decrementStock,
+                child: Icon(Icons.remove),
+              ),
+            ],
+          ),
+          TextField(
+            controller: descriptionController,
+            decoration: const InputDecoration(hintText: 'Descripción'),
+          ),
+          ElevatedButton(
+              onPressed: () {
+                setState(() {});
+              },
+              child: const Text('Submit')),
+          if (_image != null) Text(nameController.text),
         ],
       ),
     );
