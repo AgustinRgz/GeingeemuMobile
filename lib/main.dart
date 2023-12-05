@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'buscador.dart';
 import 'miscompras.dart';
 import 'Miperfil.dart';
+import 'Wishlist.dart';
 import 'carrito.dart';
 import 'ventas.dart';
 import 'inicio.dart';
@@ -206,7 +207,12 @@ class _HomeViewState extends State<HomeView> {
               title: const Text('Mi lista de deseos'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pushNamed(context, '/third');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => WishlistView(),
+                  ),
+                );
               },
             ),
             ListTile(
