@@ -65,22 +65,38 @@ class ObscuredTextFieldSample extends StatelessWidget {
     return SizedBox(
       width: 400,
       height: 40,
-      child: TextField(
-        obscureText: false,
-        decoration: InputDecoration(
-          border: OutlineInputBorder(),
-          labelText: searchText.isEmpty ? 'Buscar' : searchText,
-          icon: IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => BuscadorView(searchText: searchText)));
-            }
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BuscadorView(searchText: searchText),
+            ),
+          );
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.blueAccent,
+            ),
+          ),
+          child: Row(
+            children: [
+              const Icon(Icons.search),
+              const SizedBox(width: 8),
+              Text(
+                'Buscar',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 }
+
 
 
 
@@ -126,7 +142,7 @@ class _HomeViewState extends State<HomeView> {
   final List<Widget> _pages = [
     const InicioView(),
     ShoppingCartView(),
-    PlaceholderWidget(color: Colors.blue, text: 'Lista de Deseos'),
+    WishlistView(),
     const SellView(),
   ];
 
