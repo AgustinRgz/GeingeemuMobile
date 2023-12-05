@@ -116,43 +116,19 @@ class _NewSellViewState extends State<NewSellView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Nuevo Juego'),
+        foregroundColor: const Color.fromRGBO(0, 137, 195, 100),
+        backgroundColor: const Color.fromARGB(
+          255,
+          199,
+          199,
+          199,
+        ),
+      ),
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: <Widget>[
-          Container(
-            padding: const EdgeInsets.all(10.0),
-            color: const Color.fromARGB(
-              255,
-              199,
-              199,
-              199,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text('Cancelar'),
-                ),
-                SizedBox(height: 8.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Nuevo juego',
-                      style: TextStyle(
-                        fontSize: 30.0,
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromRGBO(0, 137, 195, 100),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
           if (_image != null) _imagePreview(),
           _imageButtons(),
           _labeledTextField(nameController, 'Nombre', 'Nombre del juego'),
@@ -163,8 +139,7 @@ class _NewSellViewState extends State<NewSellView> {
           _labeledTextField(
               descriptionController, 'Descripción', 'Descripción del juego',
               expands: true),
-          _labeledTextField(
-              priceController, 'Precio', 'Precio del juego',
+          _labeledTextField(priceController, 'Precio', 'Precio del juego',
               keyboardType: TextInputType.number),
           _submitButton(),
         ],
