@@ -1,8 +1,10 @@
+import 'package:file_picker/_internal/file_picker_web.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:file_picker/file_picker.dart';
 
 class SellView extends StatefulWidget {
   const SellView({super.key});
@@ -72,7 +74,7 @@ class _SellViewState extends State<SellView> {
 }
 
 class NewSellView extends StatefulWidget {
-  const NewSellView({super.key});
+  const NewSellView({Key? key}) : super(key: key);
 
   @override
   _NewSellViewState createState() => _NewSellViewState();
@@ -86,6 +88,52 @@ class _NewSellViewState extends State<NewSellView> {
   final TextEditingController stockController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
+
+  void populateFormFields() {
+    if (game != null && game!.isNotEmpty) {
+      Game firstGame = game![0];
+      nameController.text = firstGame.nombre;
+      brandController.text = firstGame.marca;
+      stockController.text = firstGame.stock;
+      descriptionController.text = firstGame.descripcion;
+      priceController.text = firstGame.precio;
+      _image = File(firstGame.imagen);
+    }
+  }
+
+  //FilePicker
+  List<Game>? game;
+
+  Future<void> loadDJsFromJsonFile() async {
+    try {
+      FilePickerResult? result = await FilePickerWeb.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['json'],
+      );
+
+      if (result != null) {
+        List<int> bytes = result.files.single.bytes!;
+        String jsonString = String.fromCharCodes(bytes);
+
+        List<dynamic> jsonList = json.decode(jsonString);
+
+        List<Game> newGame = jsonList.map((json) => Game.fromJson(json)).toList();
+
+        print('Loaded Game from file: $newGame');
+
+        setState(() {
+          game ??= [];
+          game!.addAll(newGame);
+          populateFormFields();
+        });
+      } else {
+        print('No file selected.');
+      }
+    } catch (error) {
+      print('Error loading Game from file: $error');
+    }
+  }
+//End FilePicker
 
   void incrementStock() {
     setState(() {
@@ -129,19 +177,25 @@ class _NewSellViewState extends State<NewSellView> {
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: <Widget>[
-          if (_image != null) _imagePreview(),
+          if (_image != null) _imagePreview(), //Carga la imagen del JSON
           _imageButtons(),
-          _labeledTextField(nameController, 'Nombre', 'Nombre del juego'),
-          _labeledTextField(brandController, 'Marca', 'Marca del juego'),
+          _labeledTextField(nameController, 'Nombre', 'Nombre del juego'), //Carga el nombre del JSON
+          _labeledTextField(brandController, 'Marca', 'Marca del juego'), //Carga la marca del JSON
           _labeledTextField(stockController, 'Stock', 'Cantidad disponible',
-              keyboardType: TextInputType.number),
+              keyboardType: TextInputType.number), //Carga el stock del JSON
           _numericInput(),
           _labeledTextField(
               descriptionController, 'Descripción', 'Descripción del juego',
-              expands: true),
+              expands: true), //Carga la descripción del JSON
           _labeledTextField(priceController, 'Precio', 'Precio del juego',
-              keyboardType: TextInputType.number),
+              keyboardType: TextInputType.number), //Carga el precio del JSON
           _submitButton(),
+          ElevatedButton(
+              onPressed: () {
+                loadDJsFromJsonFile();
+              },
+              child: Text('Cargar juego desde archivo JSON'),
+            ),
         ],
       ),
     );
@@ -243,6 +297,35 @@ class _NewSellViewState extends State<NewSellView> {
         Navigator.pushNamed(context, '/');
       },
       child: const Text('Submit'),
+    );
+  }
+}
+
+class Game {
+  final String nombre;
+  final String marca;
+  final String imagen;
+  final String stock;
+  final String descripcion;
+  final String precio;
+
+  Game({
+    required this.nombre,
+    required this.marca,
+    required this.imagen,
+    required this.stock,
+    required this.descripcion,
+    required this.precio
+  });
+
+  factory Game.fromJson(Map<String, dynamic> json) {
+    return Game(
+      nombre: json['nombre'],
+      marca: json['marca'],
+      imagen: json['imagen'],
+      stock: json['stock'],
+      descripcion: json['descripcion'],
+      precio: json['precio']
     );
   }
 }

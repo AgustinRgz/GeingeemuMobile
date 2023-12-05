@@ -3,7 +3,8 @@
       "nombre": "Halo Infinite Xbox Collector Steelbook Edition",
       "marca": "Microsoft",
       "imagen": "assets/imagenes/haloinfinite.jpg",
-      "stock": 2,
-      "descripcion": "Juego de Halo"
+      "stock": "2",
+      "descripcion": "The legendary Halo series returns with the most expansive Master Chief campaign yet.",
+      "precio": "$1,000.00"
     }
   ]
