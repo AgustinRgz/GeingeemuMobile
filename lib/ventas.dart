@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
+import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class SellView extends StatefulWidget {
   const SellView({super.key});
@@ -84,8 +85,8 @@ class _NewSellViewState extends State<NewSellView> {
   final TextEditingController brandController = TextEditingController();
   final TextEditingController stockController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController priceController = TextEditingController();
 
-  // Function to increment the stock
   void incrementStock() {
     setState(() {
       int currentStock = int.tryParse(stockController.text) ?? 0;
@@ -93,7 +94,6 @@ class _NewSellViewState extends State<NewSellView> {
     });
   }
 
-  // Function to decrement the stock
   void decrementStock() {
     setState(() {
       int currentStock = int.tryParse(stockController.text) ?? 0;
@@ -117,20 +117,22 @@ class _NewSellViewState extends State<NewSellView> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(
-        scrollDirection: Axis.vertical,
+        padding: const EdgeInsets.all(16.0),
         children: <Widget>[
           Container(
             padding: const EdgeInsets.all(10.0),
             color: const Color.fromARGB(
-                255, 199, 199, 199), // Color de fondo del título
+              255,
+              199,
+              199,
+              199,
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    // Utiliza Navigator.pop para retroceder a la vista anterior
                     Navigator.pop(context);
-                    Navigator.pushNamed(context, '/');
                   },
                   child: Text('Cancelar'),
                 ),
@@ -151,83 +153,121 @@ class _NewSellViewState extends State<NewSellView> {
               ],
             ),
           ),
-          // Contenido de la vista
-          Expanded(
-            child: Center(
-              child: Text(
-                '',
-                style: TextStyle(fontSize: 18.0),
-              ),
-            ),
-          ),
-          if (_image != null)
-            kIsWeb
-                ? Image.network(
-                    _image!.path,
-                    width: MediaQuery.of(context).size.width,
-                  )
-                : Image.file(
-                    _image!,
-                    width: MediaQuery.of(context).size.width,
-                  ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                  onPressed: () => getImage(ImageSource.gallery),
-                  child: const Text("Cargar Imagen")),
-              const SizedBox(
-                width: 10,
-                height: 10,
-              ),
-              ElevatedButton(
-                  onPressed: () => getImage(ImageSource.camera),
-                  child: const Text("Tomar Foto")),
-            ],
-          ),
-          TextField(
-            controller: nameController,
-            decoration: const InputDecoration(hintText: 'Nombre'),
-          ),
-          TextField(
-            controller: brandController,
-            decoration: const InputDecoration(hintText: 'Marca'),
-          ),
-          TextField(
-            controller: stockController,
-            keyboardType: TextInputType.number,
-            decoration: const InputDecoration(hintText: 'Stock'),
-          ),
-
-          // Numeric input for incrementing and decrementing stock
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: incrementStock,
-                child: Icon(Icons.add),
-              ),
-              SizedBox(width: 10),
-              ElevatedButton(
-                onPressed: decrementStock,
-                child: Icon(Icons.remove),
-              ),
-            ],
-          ),
-          TextField(
-            controller: descriptionController,
-            decoration: const InputDecoration(hintText: 'Descripción'),
-          ),
-          ElevatedButton(
-              onPressed: () {
-                setState(() {});
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/');
-              },
-              child: const Text('Submit')),
-          if (_image != null) Text(nameController.text),
+          if (_image != null) _imagePreview(),
+          _imageButtons(),
+          _labeledTextField(nameController, 'Nombre', 'Nombre del juego'),
+          _labeledTextField(brandController, 'Marca', 'Marca del juego'),
+          _labeledTextField(stockController, 'Stock', 'Cantidad disponible',
+              keyboardType: TextInputType.number),
+          _numericInput(),
+          _labeledTextField(
+              descriptionController, 'Descripción', 'Descripción del juego',
+              expands: true),
+          _labeledTextField(
+              priceController, 'Precio', 'Precio del juego',
+              keyboardType: TextInputType.number),
+          _submitButton(),
         ],
       ),
+    );
+  }
+
+  Widget _imagePreview() {
+    if (_image != null) {
+      return kIsWeb
+          ? Image.network(
+              _image!.path,
+              width: double.infinity,
+              height: 200.0,
+              fit: BoxFit.cover,
+            )
+          : Image.file(
+              _image!,
+              width: double.infinity,
+              height: 200.0,
+              fit: BoxFit.cover,
+            );
+    } else {
+      return Container(); // Placeholder for when there is no image selected
+    }
+  }
+
+  Widget _imageButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ElevatedButton(
+          onPressed: () => getImage(ImageSource.gallery),
+          child: const Text("Cargar Imagen"),
+        ),
+        const SizedBox(width: 10),
+        ElevatedButton(
+          onPressed: () => getImage(ImageSource.camera),
+          child: const Text("Tomar Foto"),
+        ),
+      ],
+    );
+  }
+
+  Widget _labeledTextField(
+      TextEditingController controller, String hintText, String label,
+      {TextInputType? keyboardType, bool expands = false, int maxLines = 1}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 8.0),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8.0),
+            color: Colors.grey[200],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: TextFormField(
+              controller: controller,
+              keyboardType: keyboardType,
+              maxLines: expands ? null : maxLines,
+              decoration: InputDecoration(
+                hintText: hintText,
+                border: InputBorder.none,
+              ),
+              style: TextStyle(fontSize: 18.0),
+            ),
+          ),
+        ),
+        SizedBox(height: 16.0),
+      ],
+    );
+  }
+
+  Widget _numericInput() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ElevatedButton(
+          onPressed: incrementStock,
+          child: Icon(Icons.add),
+        ),
+        SizedBox(width: 10),
+        ElevatedButton(
+          onPressed: decrementStock,
+          child: Icon(Icons.remove),
+        ),
+      ],
+    );
+  }
+
+  Widget _submitButton() {
+    return ElevatedButton(
+      onPressed: () {
+        Navigator.pop(context);
+        Navigator.pushNamed(context, '/');
+      },
+      child: const Text('Submit'),
     );
   }
 }
